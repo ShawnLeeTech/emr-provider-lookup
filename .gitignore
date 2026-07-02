@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Django
+*.sqlite3
+db.sqlite3
+staticfiles/
+
+# Data files
+data/raw/
+data/processed/
+*.csv
+*.zip
+*.xlsx
+
+# System files
+.DS_Store
+
+# Logs
+*.log
