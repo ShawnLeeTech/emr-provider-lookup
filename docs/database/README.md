@@ -1,13 +1,39 @@
 # Database Documentation
 
-This directory stores database-related documentation for the EMRTS Provider Lookup project.
+This directory contains database design documentation for the EMRTS Provider Lookup project.
 
-Planned documentation includes:
+The database documentation will be used to describe the provider lookup data model, entity relationships, schema decisions, and diagram-based planning.
 
-- Entity relationship diagrams
-- dbdiagram DBML files
+## Planned Contents
+
+Planned database documentation includes:
+
+- dbdiagram ERD files
 - Mermaid database diagrams
-- SQL schema notes
+- PostgreSQL schema notes
+- Data source mapping notes
 - Database design decisions
 
-No real provider data should be used as a primary key. System-assigned numeric IDs should be used where appropriate.
+## Diagram Standards
+
+This project will use:
+
+- dbdiagram for ERD documentation
+- Mermaid for diagrams included in Markdown documentation
+
+## Design Principles
+
+The database design should use system-assigned numeric IDs as primary keys where appropriate.
+
+Real-world identifiers, such as NPI numbers, should be stored as data fields rather than used as primary keys. These fields may use uniqueness constraints when required by the data model.
+
+## Planned Data Model Areas
+
+The initial data model will focus on:
+
+- Providers
+- Provider identifiers
+- Provider locations
+- Provider taxonomy codes
+- Public data source references
+- Data import and update tracking
