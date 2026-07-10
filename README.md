@@ -4,25 +4,25 @@
 
 EMRTS Provider Lookup is a web application project for searching and locating healthcare providers using public provider data sources.
 
-The goal is to create a clearer, more usable provider lookup experience by organizing provider identity, location, taxonomy, and search-related information into a structured application.
+The goal is to create a simpler provider lookup experience by focusing on the most important search fields and presenting provider information in a clear and usable format.
 
 ## Objective
 
 The objective is to build a functional provider lookup system that allows users to search for healthcare providers through a simplified interface.
 
-The application is planned to support provider search and lookup workflows such as:
+The initial search interface will focus on:
 
-- Searching by provider name
-- Looking up providers by NPI
-- Searching by location
-- Filtering by provider taxonomy
-- Displaying organized provider profile information
+- Taxonomy Description
+- Provider First Name
+- Provider Last Name
+- City
+- State
+- Zip Code
 
 ## Public Data Sources
 
-The project is based on public healthcare provider data sources, including:
+The project is based on the following public healthcare provider data sources:
 
-- CMS NPI Registry
 - CMS NPPES downloadable data files
 - NUCC Health Care Provider Taxonomy Code Set
 
@@ -43,7 +43,7 @@ Project documentation is organized under the `docs` directory.
 
 Current documentation includes:
 
-- `docs/database/` - Database design notes, ERD documentation, Mermaid diagrams, and schema planning
+- `docs/database/` - Database design notes, ERD documentation, Mermaid diagrams, DBML files, and PostgreSQL schema planning
 
 ## Development Roadmap
 
@@ -53,9 +53,9 @@ Planned development milestones include:
 2. Create database diagrams using dbdiagram and Mermaid.
 3. Build the initial PostgreSQL schema.
 4. Develop the Django application structure.
-5. Implement provider search and lookup functionality.
+5. Implement provider search functionality using the simplified search fields.
 6. Create a basic web interface for demonstrating provider search results.
-7. Refine documentation and deployment instructions as the project evolves.
+7. Refine documentation and implementation as the project evolves.
 
 ## Repository Maintenance
 

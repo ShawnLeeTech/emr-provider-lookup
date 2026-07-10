@@ -2,11 +2,25 @@
 
 This directory contains database design documentation for the EMRTS Provider Lookup project.
 
-The database documentation will be used to describe the provider lookup data model, entity relationships, schema decisions, and diagram-based planning.
+The database design supports a simplified provider lookup interface based on the following search fields:
+
+- Taxonomy Description
+- Provider First Name
+- Provider Last Name
+- City
+- State
+- Zip Code
+
+## Public Data Sources
+
+The database design is based on the following public data sources:
+
+- CMS NPPES downloadable data files
+- NUCC Health Care Provider Taxonomy Code Set
 
 ## Planned Contents
 
-Planned database documentation includes:
+Database documentation includes:
 
 - dbdiagram ERD files
 - Mermaid database diagrams
@@ -16,7 +30,7 @@ Planned database documentation includes:
 
 ## Diagram Standards
 
-This project will use:
+This project uses:
 
 - dbdiagram for ERD documentation
 - Mermaid for diagrams included in Markdown documentation
@@ -27,13 +41,14 @@ The database design should use system-assigned numeric IDs as primary keys where
 
 Real-world identifiers, such as NPI numbers, should be stored as data fields rather than used as primary keys. These fields may use uniqueness constraints when required by the data model.
 
-## Planned Data Model Areas
+The first version of the database should stay focused on the simplified provider search workflow and avoid unnecessary complexity.
 
-The initial data model will focus on:
+## Initial Data Model Areas
+
+The initial data model focuses on:
 
 - Providers
-- Provider identifiers
-- Provider locations
+- Provider addresses
 - Provider taxonomy codes
-- Public data source references
-- Data import and update tracking
+- Public data sources
+- Data import tracking
