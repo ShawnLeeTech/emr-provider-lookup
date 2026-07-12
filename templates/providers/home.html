@@ -8,78 +8,196 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="brand" href="{% url 'providers:home' %}">
+                <img class="brand-logo" src="{% static 'img/emr-logo.png' %}" alt="EMR Technical Solutions logo">
+                <span>Provider Lookup</span>
+            </a>
+            <nav class="site-nav">
+                <a href="{% url 'providers:home' %}">Search</a>
+                <a href="/admin/">Admin</a>
+                <a href="https://download.cms.gov/nppes/NPI_Files.html" target="_blank" rel="noreferrer">CMS NPPES</a>
+                <a href="https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40" target="_blank" rel="noreferrer">NUCC Taxonomy</a>
+            </nav>
+        </div>
+    </header>
+
     <main class="page">
-        <section class="hero">
+        <section class="hero compact-hero">
             <div class="hero-content">
                 <p class="eyebrow">EMRTS Provider Lookup</p>
-                <h1>Search healthcare providers with a simpler, cleaner workflow.</h1>
+                <h1>Search healthcare provider records.</h1>
                 <p class="hero-text">
-                    This application is designed to help users locate healthcare providers using
-                    public provider data from CMS NPPES downloadable files and the NUCC taxonomy code set.
+                    Search by NPI, NPI type, taxonomy, provider name, city, state, or zip code.
                 </p>
             </div>
         </section>
 
         <section class="search-card">
             <div class="card-header">
-                <h2>Provider Search</h2>
-                <p>Initial interface based on the approved six-field search scope.</p>
+                <h2>Search NPI Records</h2>
+                <p>Enter one or more fields to locate matching healthcare providers.</p>
             </div>
 
             <form class="search-form" method="get">
                 <div class="form-grid">
                     <label>
+                        NPI Number
+                        <input type="text" name="npi" value="{{ search_values.npi }}" placeholder="e.g., 1003000005">
+                    </label>
+
+                    <label>
+                        NPI Type
+                        <select name="entity_type_code">
+                            <option value="">Any</option>
+                            <option value="1" {% if search_values.entity_type_code == "1" %}selected{% endif %}>Individual</option>
+                            <option value="2" {% if search_values.entity_type_code == "2" %}selected{% endif %}>Organization</option>
+                        </select>
+                    </label>
+
+                    <label>
                         Taxonomy Description
-                        <input type="text" name="taxonomy_description" placeholder="e.g., Family Medicine">
+                        <input type="text" name="taxonomy_description" value="{{ search_values.taxonomy_description }}" placeholder="e.g., Family Medicine">
                     </label>
 
                     <label>
                         Provider First Name
-                        <input type="text" name="provider_first_name" placeholder="e.g., John">
+                        <input type="text" name="provider_first_name" value="{{ search_values.provider_first_name }}" placeholder="e.g., Emily">
                     </label>
 
                     <label>
                         Provider Last Name
-                        <input type="text" name="provider_last_name" placeholder="e.g., Smith">
+                        <input type="text" name="provider_last_name" value="{{ search_values.provider_last_name }}" placeholder="e.g., Carter">
                     </label>
 
                     <label>
                         City
-                        <input type="text" name="city" placeholder="e.g., Durham">
+                        <input type="text" name="city" value="{{ search_values.city }}" placeholder="e.g., Durham">
                     </label>
 
                     <label>
                         State
-                        <input type="text" name="state" placeholder="e.g., NC">
+                        <input type="text" name="state" value="{{ search_values.state }}" placeholder="e.g., NC">
                     </label>
 
                     <label>
                         Zip Code
-                        <input type="text" name="zip_code" placeholder="e.g., 27708">
+                        <input type="text" name="zip_code" value="{{ search_values.zip_code }}" placeholder="e.g., 27708">
                     </label>
                 </div>
 
+                <label class="exact-match-row">
+                    <input type="checkbox" name="exact_match" {% if exact_match %}checked{% endif %}>
+                    <span>Search for exact matches only</span>
+                </label>
+
                 <div class="actions">
-                    <button type="submit">Search Providers</button>
-                    <button type="reset" class="secondary">Clear</button>
+                    <button type="submit">Search</button>
+                    <a class="secondary-link" href="{% url 'providers:home' %}">Clear</a>
                 </div>
             </form>
         </section>
 
-        <section class="info-grid">
-            <div>
-                <h3>Current Stage</h3>
-                <p>Initial application structure and search interface setup.</p>
+        <section class="results-section">
+            <div class="results-header">
+                <div>
+                    <p class="eyebrow dark">Search Results</p>
+                    {% if has_query %}
+                        <h2>{{ result_count }} provider result{{ result_count|pluralize }}</h2>
+                    {% else %}
+                        <h2>Ready to search</h2>
+                    {% endif %}
+                </div>
+                <p class="result-note">
+                    {% if has_query %}
+                        Showing up to 20 matching provider records{% if exact_match %} using exact match search{% endif %}.
+                    {% else %}
+                        Enter search criteria above to view provider records.
+                    {% endif %}
+                </p>
             </div>
-            <div>
-                <h3>Database Design</h3>
-                <p>ERD, DBML, and PostgreSQL schema are documented in the repository.</p>
-            </div>
-            <div>
-                <h3>Next Step</h3>
-                <p>Connect Django models and search logic to the provider database structure.</p>
-            </div>
+
+            {% if has_query %}
+                {% if providers %}
+                    <div class="result-list">
+                        {% for provider in providers %}
+                            <article class="result-card">
+                                <div class="result-main">
+                                    <div>
+                                        <h3>
+                                            <a class="result-title-link" href="{% url 'providers:detail' provider.npi %}">
+                                                {% if provider.organization_name %}
+                                                    {{ provider.organization_name }}
+                                                {% else %}
+                                                    {{ provider.provider_first_name }} {{ provider.provider_last_name }}
+                                                {% endif %}
+                                            </a>
+                                        </h3>
+                                        <p class="provider-meta">
+                                            NPI: {{ provider.npi }}
+                                            {% if provider.provider_credential %}
+                                                · {{ provider.provider_credential }}
+                                            {% endif %}
+                                            ·
+                                            {% if provider.entity_type_code == "1" %}
+                                                Individual
+                                            {% elif provider.entity_type_code == "2" %}
+                                                Organization
+                                            {% else %}
+                                                Entity Type {{ provider.entity_type_code }}
+                                            {% endif %}
+                                        </p>
+                                    </div>
+
+                                    <div class="badge-group">
+                                        {% for item in provider.provider_taxonomies.all %}
+                                            <span class="badge">{{ item.taxonomy_code.taxonomy_description }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="result-card-actions">
+                                    <a href="{% url 'providers:detail' provider.npi %}">View Provider Details</a>
+                                </div>
+
+                                <div class="result-details">
+                                    {% for address in provider.addresses.all %}
+                                        <div>
+                                            <span class="detail-label">Location</span>
+                                            <p>{{ address.city }}, {{ address.state }} {{ address.zip_code }}</p>
+                                        </div>
+                                        <div>
+                                            <span class="detail-label">Phone</span>
+                                            <p>{{ address.telephone_number|default:"Not available" }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <h3>No providers found</h3>
+                        <p>Try removing one filter or searching by city, state, or taxonomy description.</p>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>Start a provider search</h3>
+                    <p>Use the form above to search by NPI, taxonomy, provider name, city, state, or zip code.</p>
+                </div>
+            {% endif %}
         </section>
+
+        <footer class="site-footer">
+            <p>
+                Data sources: CMS NPPES downloadable data files and the NUCC Health Care Provider Taxonomy Code Set.
+            </p>
+            <p>
+                This lookup tool is designed to support provider search workflows. NPI information does not by itself validate licensure or credentialing.
+            </p>
+        </footer>
     </main>
 </body>
 </html>

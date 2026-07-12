@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Detail | Provider Lookup</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="brand" href="{% url 'providers:home' %}">
+                <img class="brand-logo" src="{% static 'img/emr-logo.png' %}" alt="EMR Technical Solutions logo">
+                <span>Provider Lookup</span>
+            </a>
+            <nav class="site-nav">
+                <a href="{% url 'providers:home' %}">Search</a>
+                <a href="/admin/">Admin</a>
+                <a href="https://download.cms.gov/nppes/NPI_Files.html" target="_blank" rel="noreferrer">CMS NPPES</a>
+                <a href="https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40" target="_blank" rel="noreferrer">NUCC Taxonomy</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="detail-hero refined-detail-hero">
+            <a class="back-link" href="{% url 'providers:home' %}">← Back to Search</a>
+
+            <p class="eyebrow">Provider Profile</p>
+
+            <h1>
+                {% if provider.organization_name %}
+                    {{ provider.organization_name }}
+                {% else %}
+                    {{ provider.provider_first_name }} {{ provider.provider_last_name }}
+                {% endif %}
+            </h1>
+
+            <div class="profile-summary">
+                <span>NPI {{ provider.npi }}</span>
+                <span>
+                    {% if provider.entity_type_code == "1" %}
+                        Individual
+                    {% elif provider.entity_type_code == "2" %}
+                        Organization
+                    {% else %}
+                        Entity Type {{ provider.entity_type_code }}
+                    {% endif %}
+                </span>
+                {% if provider.provider_credential %}
+                    <span>{{ provider.provider_credential }}</span>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="detail-grid">
+            <article class="detail-panel">
+                <h2>Provider Information</h2>
+                <dl class="detail-list">
+                    <div>
+                        <dt>NPI Number</dt>
+                        <dd>{{ provider.npi }}</dd>
+                    </div>
+                    <div>
+                        <dt>NPI Type</dt>
+                        <dd>
+                            {% if provider.entity_type_code == "1" %}
+                                Individual
+                            {% elif provider.entity_type_code == "2" %}
+                                Organization
+                            {% else %}
+                                Entity Type {{ provider.entity_type_code }}
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>First Name</dt>
+                        <dd>{{ provider.provider_first_name|default:"Not available" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Last Name</dt>
+                        <dd>{{ provider.provider_last_name|default:"Not available" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Organization</dt>
+                        <dd>{{ provider.organization_name|default:"Not available" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Credential</dt>
+                        <dd>{{ provider.provider_credential|default:"Not available" }}</dd>
+                    </div>
+                </dl>
+            </article>
+
+            <article class="detail-panel">
+                <h2>Practice Location</h2>
+                {% for address in provider.addresses.all %}
+                    <dl class="detail-list">
+                        <div>
+                            <dt>Address Type</dt>
+                            <dd>{{ address.address_type|title }}</dd>
+                        </div>
+                        <div>
+                            <dt>City</dt>
+                            <dd>{{ address.city }}</dd>
+                        </div>
+                        <div>
+                            <dt>State</dt>
+                            <dd>{{ address.state }}</dd>
+                        </div>
+                        <div>
+                            <dt>Zip Code</dt>
+                            <dd>{{ address.zip_code }}</dd>
+                        </div>
+                        <div>
+                            <dt>Phone</dt>
+                            <dd>{{ address.telephone_number|default:"Not available" }}</dd>
+                        </div>
+                    </dl>
+                {% empty %}
+                    <p class="muted">No address information is available.</p>
+                {% endfor %}
+            </article>
+        </section>
+
+        <section class="detail-panel taxonomy-panel">
+            <h2>Taxonomy Information</h2>
+
+            <div class="taxonomy-list">
+                {% for item in provider.provider_taxonomies.all %}
+                    <article class="taxonomy-card">
+                        <div class="taxonomy-card-header">
+                            <div>
+                                <h3>{{ item.taxonomy_code.taxonomy_description }}</h3>
+                                <p>{{ item.taxonomy_code.code }}</p>
+                            </div>
+
+                            {% if item.is_primary %}
+                                <span class="badge">Primary</span>
+                            {% endif %}
+                        </div>
+
+                        <dl class="detail-list compact">
+                            <div>
+                                <dt>Grouping</dt>
+                                <dd>{{ item.taxonomy_code.grouping|default:"Not available" }}</dd>
+                            </div>
+                            <div>
+                                <dt>Classification</dt>
+                                <dd>{{ item.taxonomy_code.classification|default:"Not available" }}</dd>
+                            </div>
+                            <div>
+                                <dt>Specialization</dt>
+                                <dd>{{ item.taxonomy_code.specialization|default:"Not available" }}</dd>
+                            </div>
+                            <div>
+                                <dt>License State</dt>
+                                <dd>{{ item.license_state|default:"Not available" }}</dd>
+                            </div>
+                        </dl>
+                    </article>
+                {% empty %}
+                    <p class="muted">No taxonomy information is available.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <p>
+                Data sources: CMS NPPES downloadable data files and the NUCC Health Care Provider Taxonomy Code Set.
+            </p>
+            <p>
+                This lookup tool is designed to support provider search workflows. NPI information does not by itself validate licensure or credentialing.
+            </p>
+        </footer>
+    </main>
+</body>
+</html>

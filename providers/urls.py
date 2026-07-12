@@ -6,4 +6,5 @@ app_name = "providers"
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("providers/<str:npi>/", views.provider_detail, name="detail"),
 ]
