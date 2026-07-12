@@ -13,10 +13,8 @@ The database design is based on:
 
 ## Search Fields
 
-The current provider lookup interface supports eight search fields:
+The current provider lookup interface supports six search fields:
 
-- NPI Number
-- NPI Type
 - Taxonomy Description
 - Provider First Name
 - Provider Last Name

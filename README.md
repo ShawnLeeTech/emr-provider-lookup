@@ -6,7 +6,7 @@ The project is designed around public healthcare provider data sources, includin
 
 ## Features
 
-- Search provider records by NPI number, NPI type, taxonomy description, provider first name, provider last name, city, state, and zip code
+- Search provider records by taxonomy description, provider first name, provider last name, city, state, and zip code
 - Support optional exact-match search
 - Display provider search results with NPI, provider type, taxonomy, practice location, and phone information
 - Provide a provider detail page with identity, practice location, and taxonomy profile information
@@ -41,8 +41,6 @@ System-generated numeric IDs are used as primary keys. Real-world identifiers, s
 
 The current provider lookup interface supports:
 
-- NPI Number
-- NPI Type
 - Taxonomy Description
 - Provider First Name
 - Provider Last Name

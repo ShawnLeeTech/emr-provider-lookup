@@ -4,8 +4,6 @@ from .models import Provider
 
 
 SEARCH_FIELDS = [
-    "npi",
-    "entity_type_code",
     "taxonomy_description",
     "provider_first_name",
     "provider_last_name",
@@ -34,15 +32,6 @@ def home(request):
             .prefetch_related("addresses", "provider_taxonomies__taxonomy_code")
             .order_by("provider_last_name", "provider_first_name", "organization_name")
         )
-
-        if search_values["npi"]:
-            if exact_match:
-                providers = providers.filter(npi=search_values["npi"])
-            else:
-                providers = providers.filter(npi__startswith=search_values["npi"])
-
-        if search_values["entity_type_code"]:
-            providers = providers.filter(entity_type_code=search_values["entity_type_code"])
 
         if search_values["taxonomy_description"]:
             if exact_match:

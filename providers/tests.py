@@ -3,7 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from django.core.management import call_command
-from django.test import Client, TestCase
+from django.test import TestCase
 
 from .models import (
     ImportBatch,
@@ -53,8 +53,11 @@ class ProviderLookupViewTests(TestCase):
         html = response.content.decode()
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Search NPI Records", html)
+        self.assertIn("Provider Search", html)
         self.assertIn("Ready to search", html)
+        self.assertIn("Taxonomy Description", html)
+        self.assertNotIn("NPI Number", html)
+        self.assertNotIn("NPI Type", html)
         self.assertNotIn("Emily Carter", html)
 
     def test_city_search_returns_matching_provider(self):

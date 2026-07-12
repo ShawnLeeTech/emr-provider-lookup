@@ -678,3 +678,28 @@ select:focus {
     height: 16px;
     accent-color: var(--primary);
 }
+
+/* Final search page alignment refinements */
+.search-card .exact-match-row {
+    width: 100%;
+    justify-content: center;
+    margin-top: 24px;
+    text-align: center;
+}
+
+.search-card .actions {
+    justify-content: center;
+}
+
+.ready-results-header .result-note {
+    max-width: none;
+    white-space: nowrap;
+    text-align: right;
+}
+
+@media (max-width: 900px) {
+    .ready-results-header .result-note {
+        white-space: normal;
+        text-align: left;
+    }
+}

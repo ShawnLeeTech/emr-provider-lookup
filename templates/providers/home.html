@@ -29,33 +29,19 @@
                 <p class="eyebrow">EMRTS Provider Lookup</p>
                 <h1>Search healthcare provider records.</h1>
                 <p class="hero-text">
-                    Search by NPI, NPI type, taxonomy, provider name, city, state, or zip code.
+                    Search by taxonomy, provider name, city, state, or zip code.
                 </p>
             </div>
         </section>
 
         <section class="search-card">
             <div class="card-header">
-                <h2>Search NPI Records</h2>
+                <h2>Provider Search</h2>
                 <p>Enter one or more fields to locate matching healthcare providers.</p>
             </div>
 
             <form class="search-form" method="get">
                 <div class="form-grid">
-                    <label>
-                        NPI Number
-                        <input type="text" name="npi" value="{{ search_values.npi }}" placeholder="e.g., 1003000005">
-                    </label>
-
-                    <label>
-                        NPI Type
-                        <select name="entity_type_code">
-                            <option value="">Any</option>
-                            <option value="1" {% if search_values.entity_type_code == "1" %}selected{% endif %}>Individual</option>
-                            <option value="2" {% if search_values.entity_type_code == "2" %}selected{% endif %}>Organization</option>
-                        </select>
-                    </label>
-
                     <label>
                         Taxonomy Description
                         <input type="text" name="taxonomy_description" value="{{ search_values.taxonomy_description }}" placeholder="e.g., Family Medicine">
@@ -100,23 +86,27 @@
         </section>
 
         <section class="results-section">
-            <div class="results-header">
-                <div>
-                    <p class="eyebrow dark">Search Results</p>
-                    {% if has_query %}
+            {% if has_query %}
+                <div class="results-header">
+                    <div>
+                        <p class="eyebrow dark">Search Results</p>
                         <h2>{{ result_count }} provider result{{ result_count|pluralize }}</h2>
-                    {% else %}
-                        <h2>Ready to search</h2>
-                    {% endif %}
-                </div>
-                <p class="result-note">
-                    {% if has_query %}
+                    </div>
+                    <p class="result-note">
                         Showing up to 20 matching provider records{% if exact_match %} using exact match search{% endif %}.
-                    {% else %}
+                    </p>
+                </div>
+            {% else %}
+                <div class="results-header ready-results-header">
+                    <div>
+                        <p class="eyebrow dark">Search Results</p>
+                        <h2>Ready to search</h2>
+                    </div>
+                    <p class="result-note">
                         Enter search criteria above to view provider records.
-                    {% endif %}
-                </p>
-            </div>
+                    </p>
+                </div>
+            {% endif %}
 
             {% if has_query %}
                 {% if providers %}
@@ -185,7 +175,7 @@
             {% else %}
                 <div class="empty-state">
                     <h3>Start a provider search</h3>
-                    <p>Use the form above to search by NPI, taxonomy, provider name, city, state, or zip code.</p>
+                    <p>Use the form above to search by taxonomy, provider name, city, state, or zip code.</p>
                 </div>
             {% endif %}
         </section>
@@ -195,7 +185,7 @@
                 Data sources: CMS NPPES downloadable data files and the NUCC Health Care Provider Taxonomy Code Set.
             </p>
             <p>
-                This lookup tool is designed to support provider search workflows. NPI information does not by itself validate licensure or credentialing.
+                This lookup tool is designed to support provider search workflows. Provider information does not by itself validate licensure or credentialing.
             </p>
         </footer>
     </main>
