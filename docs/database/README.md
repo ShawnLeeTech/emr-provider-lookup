@@ -13,8 +13,10 @@ The database design is based on:
 
 ## Search Fields
 
-The first version of the application focuses on six search fields:
+The current provider lookup interface supports eight search fields:
 
+- NPI Number
+- NPI Type
 - Taxonomy Description
 - Provider First Name
 - Provider Last Name
@@ -28,31 +30,33 @@ Current database documentation includes:
 
 - `provider-lookup-erd.dbml` - DBML ERD file for dbdiagram
 - `provider-lookup-mermaid.md` - Mermaid ERD documentation for GitHub review
-- `schema.sql` - Initial PostgreSQL schema
+- `schema.sql` - Initial PostgreSQL schema reference
 
 ## Design Principles
 
 The database design follows these principles:
 
 - Use system-assigned numeric IDs as primary keys.
-- Store real-world identifiers, such as NPI numbers, as data fields.
+- Store real-world identifiers, such as NPI numbers and taxonomy codes, as data fields.
 - Do not use NPI or other real provider data as primary keys.
 - Apply `NOT NULL` only to required identifier, relationship, search, source, import-tracking, and timestamp fields.
 - Keep optional NPPES fields nullable because some fields may be missing or may depend on provider type.
-- Keep provider identity, address, taxonomy, and import tracking data in separate tables.
+- Keep provider identity, address, taxonomy, source, and import tracking data in separate tables.
 
-## Initial Data Model Areas
+## Current Implementation Status
 
-The initial data model focuses on:
+The database design has been implemented in Django models and an initial migration.
 
-- Providers
-- Provider addresses
-- Provider taxonomy codes
-- Public data sources
-- Data import tracking
+Current implementation includes:
 
-## Implementation Direction
-
-The database design is prepared for future Django and PostgreSQL implementation.
-
-The next development phase will focus on creating a clean provider search interface and connecting it to the database structure.
+- Provider identity model
+- Provider address model
+- Taxonomy code model
+- Provider-taxonomy relationship model
+- Public data source tracking model
+- Import batch tracking model
+- Local sample data command
+- NUCC taxonomy CSV import command
+- CMS NPPES-style provider CSV import command
+- Django Admin registration for database management
+- Automated tests for search and import workflows
