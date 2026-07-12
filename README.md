@@ -1,17 +1,48 @@
 # EMRTS Provider Lookup
 
-## Overview
+EMRTS Provider Lookup is a Django web application for searching and reviewing healthcare provider records through a simplified provider lookup workflow.
 
-EMRTS Provider Lookup is a web application project for searching and locating healthcare providers using public provider data sources.
+The project is designed around public healthcare provider data sources, including CMS NPPES downloadable data files and the NUCC Health Care Provider Taxonomy Code Set.
 
-The goal is to create a simpler provider lookup experience by focusing on the most important search fields and presenting provider information in a clear and usable format.
+## Features
 
-## Objective
+- Search provider records by NPI number, NPI type, taxonomy description, provider first name, provider last name, city, state, and zip code
+- Support optional exact-match search
+- Display provider search results with NPI, provider type, taxonomy, practice location, and phone information
+- Provide a provider detail page with identity, practice location, and taxonomy profile information
+- Configure Django Admin for managing providers, addresses, taxonomy codes, data sources, and import batches
+- Provide sample data for local development
+- Support NUCC taxonomy CSV import
+- Support CMS NPPES-style provider CSV import
+- Include automated tests for search views and import commands
 
-The objective is to build a functional provider lookup system that allows users to search for healthcare providers through a simplified interface.
+## Technology Stack
 
-The initial search interface will focus on:
+- Python
+- Django
+- SQLite for local development
+- HTML, CSS, and Django templates
+- uv for Python dependency management
 
+## Data Model
+
+The application uses a normalized provider lookup data model:
+
+- `providers` stores core provider identity information
+- `provider_addresses` stores provider practice location information
+- `taxonomy_codes` stores NUCC taxonomy code information
+- `provider_taxonomies` connects providers with taxonomy codes
+- `data_sources` tracks public data source references
+- `import_batches` tracks data import activity
+
+System-generated numeric IDs are used as primary keys. Real-world identifiers, such as NPI numbers and taxonomy codes, are stored as data fields with uniqueness constraints where appropriate.
+
+## Search Fields
+
+The current provider lookup interface supports:
+
+- NPI Number
+- NPI Type
 - Taxonomy Description
 - Provider First Name
 - Provider Last Name
@@ -19,73 +50,84 @@ The initial search interface will focus on:
 - State
 - Zip Code
 
-## Public Data Sources
+## Local Setup
 
-The project is based on the following public healthcare provider data sources:
+Install dependencies:
 
-- CMS NPPES downloadable data files
-- NUCC Health Care Provider Taxonomy Code Set
+    uv sync
 
-## Planned Technology Stack
+Create a local environment file:
 
-The planned technology stack includes:
+    cp .env.example .env
 
-- Python
-- Django
-- PostgreSQL
-- HTML, CSS, and JavaScript
-- Mermaid for documentation diagrams
-- dbdiagram for ERD documentation
+Apply database migrations:
 
-## Documentation
+    uv run python manage.py migrate
 
-Project documentation is organized under the `docs` directory.
+Load sample development data:
 
-Current documentation includes:
+    uv run python manage.py seed_sample_data
 
-- `docs/database/` - Database design notes, ERD documentation, Mermaid diagrams, DBML files, and PostgreSQL schema planning
+Run the development server:
 
-## Project Roadmap
+    uv run python manage.py runserver 127.0.0.1:8000
 
-Completed foundation work includes:
+Open the application:
 
-1. Defined the initial provider lookup data model.
-2. Created database diagrams using dbdiagram and Mermaid.
-3. Built the initial PostgreSQL schema.
-4. Set up the Django project structure.
-5. Created the initial provider search homepage.
+    http://127.0.0.1:8000/
 
-Next development milestones include:
+## Admin Access
 
-1. Build Django models based on the approved database design.
-2. Connect the application to PostgreSQL.
-3. Implement provider search functionality using the simplified search fields.
-4. Display provider search results in a clean and professional interface.
-5. Refine documentation and implementation as the project evolves.
+Create a local admin user:
 
-## Repository Maintenance
+    uv run python manage.py createsuperuser
 
-This README should be updated when major project milestones are completed, such as database design, schema implementation, application setup, search functionality, or web interface progress.
+Open the admin panel:
 
-## Implementation Status
+    http://127.0.0.1:8000/admin/
 
-The project has moved from initial database design into application setup.
+The admin panel includes provider records, provider addresses, taxonomy codes, provider taxonomy links, data sources, and import batches.
 
-Current implementation progress includes:
+## Import Commands
 
-- Python project configuration using `uv`
-- Django project setup
-- `providers` application setup
-- Initial provider search homepage
-- Static CSS styling for a clean professional interface
-- Initial search form based on the six approved search fields
+Import NUCC taxonomy codes from a CSV file:
 
-The current homepage is a front-end structure only. Search logic and database integration will be added in later steps.
+    uv run python manage.py import_taxonomy_codes path/to/taxonomy.csv --source-version manual-import
 
-## Current Application Structure
+Import CMS NPPES-style provider records from a CSV file:
 
-- `provider_lookup/` - Django project configuration
-- `providers/` - Provider lookup application
-- `templates/providers/home.html` - Initial provider search page
-- `static/css/styles.css` - Initial UI styling
-- `docs/database/` - Database design, ERD, DBML, and PostgreSQL schema documentation
+    uv run python manage.py import_nppes_providers path/to/nppes.csv --source-version manual-import
+
+Optionally limit the number of provider rows imported:
+
+    uv run python manage.py import_nppes_providers path/to/nppes.csv --source-version manual-import --limit 1000
+
+## Testing
+
+Run the provider app tests:
+
+    uv run python manage.py test providers
+
+The current tests cover:
+
+- Homepage loading
+- Provider search behavior
+- Exact-match search behavior
+- Provider detail page loading
+- NUCC taxonomy import command
+- CMS NPPES-style provider import command
+
+## Current Status
+
+The current implementation includes:
+
+- Database model and initial migration
+- Searchable provider lookup interface
+- Provider detail page
+- Django Admin configuration
+- Local sample data command
+- NUCC taxonomy CSV import command
+- CMS NPPES-style provider CSV import command
+- Automated tests for core search and import workflows
+
+Future improvements may include larger NPPES data ingestion, pagination, advanced filters, deployment configuration, and additional validation rules.
