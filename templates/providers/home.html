@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Lookup</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="page">
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">EMRTS Provider Lookup</p>
+                <h1>Search healthcare providers with a simpler, cleaner workflow.</h1>
+                <p class="hero-text">
+                    This application is designed to help users locate healthcare providers using
+                    public provider data from CMS NPPES downloadable files and the NUCC taxonomy code set.
+                </p>
+            </div>
+        </section>
+
+        <section class="search-card">
+            <div class="card-header">
+                <h2>Provider Search</h2>
+                <p>Initial interface based on the approved six-field search scope.</p>
+            </div>
+
+            <form class="search-form" method="get">
+                <div class="form-grid">
+                    <label>
+                        Taxonomy Description
+                        <input type="text" name="taxonomy_description" placeholder="e.g., Family Medicine">
+                    </label>
+
+                    <label>
+                        Provider First Name
+                        <input type="text" name="provider_first_name" placeholder="e.g., John">
+                    </label>
+
+                    <label>
+                        Provider Last Name
+                        <input type="text" name="provider_last_name" placeholder="e.g., Smith">
+                    </label>
+
+                    <label>
+                        City
+                        <input type="text" name="city" placeholder="e.g., Durham">
+                    </label>
+
+                    <label>
+                        State
+                        <input type="text" name="state" placeholder="e.g., NC">
+                    </label>
+
+                    <label>
+                        Zip Code
+                        <input type="text" name="zip_code" placeholder="e.g., 27708">
+                    </label>
+                </div>
+
+                <div class="actions">
+                    <button type="submit">Search Providers</button>
+                    <button type="reset" class="secondary">Clear</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="info-grid">
+            <div>
+                <h3>Current Stage</h3>
+                <p>Initial application structure and search interface setup.</p>
+            </div>
+            <div>
+                <h3>Database Design</h3>
+                <p>ERD, DBML, and PostgreSQL schema are documented in the repository.</p>
+            </div>
+            <div>
+                <h3>Next Step</h3>
+                <p>Connect Django models and search logic to the provider database structure.</p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
