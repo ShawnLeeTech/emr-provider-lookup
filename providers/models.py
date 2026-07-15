@@ -1,7 +1,10 @@
+import uuid
+
 from django.db import models
 
 
 class DataSource(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     source_name = models.CharField(max_length=255)
     source_type = models.CharField(max_length=100)
     source_url = models.TextField()
@@ -17,6 +20,7 @@ class DataSource(models.Model):
 
 
 class ImportBatch(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     data_source = models.ForeignKey(
         DataSource,
         on_delete=models.PROTECT,
@@ -41,6 +45,7 @@ class ImportBatch(models.Model):
 
 
 class Provider(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     npi = models.CharField(max_length=10, unique=True)
     entity_type_code = models.CharField(max_length=1)
     provider_first_name = models.CharField(max_length=100, null=True, blank=True)
@@ -75,6 +80,7 @@ class Provider(models.Model):
 
 
 class ProviderAddress(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     provider = models.ForeignKey(
         Provider,
         on_delete=models.CASCADE,
@@ -106,6 +112,7 @@ class ProviderAddress(models.Model):
 
 
 class TaxonomyCode(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=20, unique=True)
     taxonomy_description = models.CharField(max_length=255)
     grouping = models.CharField(max_length=255, null=True, blank=True)
@@ -127,6 +134,7 @@ class TaxonomyCode(models.Model):
 
 
 class ProviderTaxonomy(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     provider = models.ForeignKey(
         Provider,
         on_delete=models.CASCADE,

@@ -34,7 +34,7 @@ Current database documentation includes:
 
 The database design follows these principles:
 
-- Use system-assigned numeric IDs as primary keys.
+- Use system-assigned UUIDs as primary keys.
 - Store real-world identifiers, such as NPI numbers and taxonomy codes, as data fields.
 - Do not use NPI or other real provider data as primary keys.
 - Apply `NOT NULL` only to required identifier, relationship, search, source, import-tracking, and timestamp fields.

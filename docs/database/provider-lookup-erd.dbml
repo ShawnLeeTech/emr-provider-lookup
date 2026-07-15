@@ -1,118 +1,109 @@
-// Provider Lookup Database Design - DBML
-// Initial ERD for the EMRTS Provider Lookup project.
-// This design supports simplified provider search by taxonomy description,
-// provider first name, provider last name, city, state, and zip code.
-// System-assigned numeric IDs are used as primary keys.
+// EMRTS Provider Lookup ERD
+// Primary keys use UUIDs.
+// Real-world identifiers such as NPI numbers and taxonomy codes are stored as unique data fields, not primary keys.
 
 Table data_sources {
-  id           bigint [pk, increment]
+  id uuid [pk]
   source_name varchar(255) [not null]
   source_type varchar(100) [not null]
-  source_url  text [not null]
+  source_url text [not null]
   description text
-  created_at  timestamp [not null, default: `CURRENT_TIMESTAMP`]
-  updated_at  timestamp [not null, default: `CURRENT_TIMESTAMP`]
-
-  Note: "Stores public source references, including CMS NPPES downloadable data files and NUCC taxonomy files."
-}
-
-Table import_batches {
-  id                  bigint [pk, increment]
-  data_source_id      bigint [not null]
-  file_name           varchar(255) [not null]
-  source_version      varchar(100)
-  import_started_at   timestamp [not null]
-  import_completed_at timestamp
-  status              varchar(50) [not null]
-  notes               text
-
-  Note: "Tracks import runs from public downloadable data files."
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
 }
 
 Table providers {
-  id                   bigint [pk, increment]
-  npi                  varchar(10) [not null, unique]
-  entity_type_code     varchar(1) [not null]
-  provider_first_name  varchar(100)
-  provider_last_name   varchar(100)
+  id uuid [pk]
+  npi varchar(10) [not null, unique]
+  entity_type_code varchar(1) [not null]
+  provider_first_name varchar(100)
+  provider_last_name varchar(100)
   provider_middle_name varchar(100)
-  provider_credential  varchar(50)
-  organization_name    varchar(255)
-  enumeration_date     date
-  last_update_date     date
-  created_at           timestamp [not null, default: `CURRENT_TIMESTAMP`]
-  updated_at           timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  provider_credential varchar(50)
+  organization_name varchar(255)
+  enumeration_date date
+  last_update_date date
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
 
   indexes {
-    provider_first_name [name: "idx_providers_first_name"]
-    provider_last_name [name: "idx_providers_last_name"]
+    provider_first_name [name: "idx_prov_first_name"]
+    provider_last_name [name: "idx_prov_last_name"]
   }
-
-  Note: "Stores core provider identity fields from CMS NPPES downloadable data files. NPI is unique but is not used as the primary key."
-}
-
-Table provider_addresses {
-  id               bigint [pk, increment]
-  provider_id      bigint [not null]
-  address_type     varchar(50) [not null]
-  address_line_1   varchar(255)
-  address_line_2   varchar(255)
-  city             varchar(100) [not null]
-  state            varchar(50) [not null]
-  zip_code         varchar(20) [not null]
-  country_code     varchar(10)
-  telephone_number varchar(50)
-  created_at       timestamp [not null, default: `CURRENT_TIMESTAMP`]
-  updated_at       timestamp [not null, default: `CURRENT_TIMESTAMP`]
-
-  indexes {
-    city [name: "idx_provider_addresses_city"]
-    state [name: "idx_provider_addresses_state"]
-    zip_code [name: "idx_provider_addresses_zip_code"]
-  }
-
-  Note: "Stores provider address information used for city, state, and zip code search."
 }
 
 Table taxonomy_codes {
-  id                   bigint [pk, increment]
-  code                 varchar(20) [not null, unique]
+  id uuid [pk]
+  code varchar(20) [not null, unique]
   taxonomy_description varchar(255) [not null]
-  grouping             varchar(255)
-  classification       varchar(255)
-  specialization       varchar(255)
-  definition           text
-  source_version       varchar(100)
-  created_at           timestamp [not null, default: `CURRENT_TIMESTAMP`]
-  updated_at           timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  grouping varchar(255)
+  classification varchar(255)
+  specialization varchar(255)
+  definition text
+  source_version varchar(100)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
 
   indexes {
-    taxonomy_description [name: "idx_taxonomy_codes_description"]
+    taxonomy_description [name: "idx_tax_desc"]
   }
+}
 
-  Note: "Stores taxonomy code information from the NUCC Health Care Provider Taxonomy Code Set."
+Table import_batches {
+  id uuid [pk]
+  data_source_id uuid [not null]
+  file_name varchar(255) [not null]
+  source_version varchar(100)
+  import_started_at timestamp [not null]
+  import_completed_at timestamp
+  status varchar(50) [not null]
+  notes text
+
+  indexes {
+    data_source_id [name: "idx_imp_source"]
+  }
+}
+
+Table provider_addresses {
+  id uuid [pk]
+  provider_id uuid [not null]
+  address_type varchar(50) [not null]
+  address_line_1 varchar(255)
+  address_line_2 varchar(255)
+  city varchar(100) [not null]
+  state varchar(50) [not null]
+  zip_code varchar(20) [not null]
+  country_code varchar(10)
+  telephone_number varchar(50)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    provider_id [name: "idx_addr_provider"]
+    city [name: "idx_addr_city"]
+    state [name: "idx_addr_state"]
+    zip_code [name: "idx_addr_zip_code"]
+  }
 }
 
 Table provider_taxonomies {
-  id               bigint [pk, increment]
-  provider_id      bigint [not null]
-  taxonomy_code_id bigint [not null]
-  is_primary       boolean [not null, default: false]
-  license_number   varchar(100)
-  license_state    varchar(50)
-  created_at       timestamp [not null, default: `CURRENT_TIMESTAMP`]
-  updated_at       timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  id uuid [pk]
+  provider_id uuid [not null]
+  taxonomy_code_id uuid [not null]
+  is_primary boolean [not null]
+  license_number varchar(100)
+  license_state varchar(50)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
 
   indexes {
-    provider_id [name: "idx_provider_taxonomies_provider_id"]
-    taxonomy_code_id [name: "idx_provider_taxonomies_taxonomy_code_id"]
+    provider_id [name: "idx_pt_provider"]
+    taxonomy_code_id [name: "idx_pt_taxonomy"]
     (provider_id, taxonomy_code_id, license_number, license_state) [unique, name: "uq_provider_taxonomy_license"]
   }
-
-  Note: "Connects providers with taxonomy codes. A provider may have multiple taxonomy records."
 }
 
 Ref: import_batches.data_source_id > data_sources.id
-Ref: provider_addresses.provider_id > providers.id [delete: cascade]
-Ref: provider_taxonomies.provider_id > providers.id [delete: cascade]
+Ref: provider_addresses.provider_id > providers.id
+Ref: provider_taxonomies.provider_id > providers.id
 Ref: provider_taxonomies.taxonomy_code_id > taxonomy_codes.id

@@ -35,7 +35,7 @@ The application uses a normalized provider lookup data model:
 - `data_sources` tracks public data source references
 - `import_batches` tracks data import activity
 
-System-generated numeric IDs are used as primary keys. Real-world identifiers, such as NPI numbers and taxonomy codes, are stored as data fields with uniqueness constraints where appropriate.
+System-generated UUIDs are used as primary keys. Real-world identifiers, such as NPI numbers and taxonomy codes, are stored as data fields with uniqueness constraints where appropriate.
 
 ## Search Fields
 
